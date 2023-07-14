@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Configuration;
 using System.Runtime.CompilerServices;
+using System.Formats.Asn1;
+using System.Globalization;
 
 /*~~ Read app.config ~~*/
 string csvNameSetting = ConfigurationManager.AppSettings["csvName"];
@@ -10,7 +12,7 @@ string simSpeedFactorSetting = ConfigurationManager.AppSettings["simSpeedFactor"
 float simSpeedFactor = float.Parse(simSpeedFactorSetting);
 
 /*~~ Read Input Data ~~*/
-
+CSVReader data = new CSVReader(csvNameSetting);
 
 /*~~ Start Threads with Interrupt ~~*/
 bool keyboardInterrupt = false;
