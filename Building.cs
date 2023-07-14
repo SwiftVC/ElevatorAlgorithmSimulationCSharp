@@ -8,6 +8,15 @@ namespace ConsoleApp1
 {
     internal class Building
     {
-        public void printTest() { Console.WriteLine("testing"); }
+        private int floors;
+
+        public Building(int Nfloors) //, floorcallsCSV)
+        {
+            this.floors = Nfloors;
+        }
+
+        public void printTest() {
+            
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace ConsoleApp1
             int currentTimeSeconds = 0;
             while (!interrupt)
             {
+                // incrementSimulation1Second();
                 // progress time 1 sec.
                 currentTimeSeconds++;
                 // wait speedfactor */ second increment.
