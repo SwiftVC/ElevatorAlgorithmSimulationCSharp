@@ -9,18 +9,12 @@ namespace ConsoleApp1
 {
     internal class CSVReader
     {
-        public CSVReader(string csvName)
+        public static List<Person> ReadCSV(string csvName)
         {
-            using (var reader = new StreamReader(csvName))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                csv.Context.RegisterClassMap<CSVHeadingsToPerson>();
-                var records = csv.GetRecords<Person>().ToList();
-                foreach (var record in records)
-                {
-                    Console.WriteLine(record.ID+","+ record.FROM_FLOOR + ","+ record.TO_FLOOR + "," + record.CALL_TIME);
-                }
-            }
+            var reader = new StreamReader(csvName);
+            var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            csv.Context.RegisterClassMap<CSVHeadingsToPerson>();
+            return csv.GetRecords<Person>().ToList();
         }
     }
     internal class CSVHeadingsToPerson : ClassMap<Person>

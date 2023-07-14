@@ -12,7 +12,7 @@ string simSpeedFactorSetting = ConfigurationManager.AppSettings["simSpeedFactor"
 float simSpeedFactor = float.Parse(simSpeedFactorSetting);
 
 /*~~ Read Input Data ~~*/
-CSVReader data = new CSVReader(csvNameSetting);
+List<Person> data = CSVReader.ReadCSV(csvNameSetting);
 
 /*~~ Start Threads with Interrupt ~~*/
 bool keyboardInterrupt = false;
