@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace ConsoleApp1
         private QueuesAtFloors queuesAtFloors;
         private QueuesAtFloors output;
         private Lift lift;
+        private float bldCurrentTime;
         public Building(int Nfloors) //, floorcallsCSV)
         {
             this.floors = Nfloors;
@@ -22,6 +24,7 @@ namespace ConsoleApp1
 
         public void incrementSimulation1Second(float currentTime)
         {
+            bldCurrentTime = currentTime;
             // the timer thread cycles 
 
             // add people to queues at current time, incrementing through everyone, checking == current time
@@ -35,11 +38,16 @@ namespace ConsoleApp1
             for (int floorIndex = floors - 1; floorIndex > -1; floorIndex--){
                 int floor = floorIndex + 1;
                 ret += "Floor: " + floor.ToString().PadLeft(4) + "|";
-                ret += "Queue: " + queuesAtFloors.PeopleAtFloor(floor).ToString().PadLeft(3) + " | ";
-                if (lift.CurrentFloor() == floor) { ret += Elevator.ElevatorStateToString(lift.GetState()) + lift.Occupants().ToString().PadLeft(3); }
-                else { };
+                ret += "Queue: " + queuesAtFloors.PeopleAtFloor(floor).ToString().PadLeft(3) + "| ";
+                if (lift.CurrentFloor() == floor) { ret += Elevator.ElevatorStateToString(lift.GetState()).PadLeft(Elevator.ELEVATORSTATEMAXFIELDWIDTH) + ":" + lift.Occupants().ToString().PadLeft(3) + "| "; }
+                else { ret += " ".PadLeft(Elevator.ELEVATORSTATEMAXFIELDWIDTH) + " " + "".PadLeft(3) + "| "; };
+
+                ret += "Output: ";
+                ret += output.PeopleAtFloor(floor).ToString().PadLeft(3) + "| ";
                 ret += '\n';
             }
+            ret += "Current Time: " + bldCurrentTime.ToString().PadLeft(5) + " seconds.";
+            
             return ret;
         }
 

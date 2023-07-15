@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -10,6 +11,7 @@ namespace ConsoleApp1
 {
     internal class TimerThread
     {
+        static int SimulationMillisecondsPerRealSecond = int.Parse(ConfigurationManager.AppSettings["SimulationMillisecondsPerRealSecond"]);
         private int currentTimeSeconds = 0;
         private Thread thread;
         private bool interrupt = false;
@@ -28,7 +30,7 @@ namespace ConsoleApp1
                 // progress time 1 sec.
                 currentTimeSeconds++;
                 // wait speedfactor */ second increment.
-
+                Thread.Sleep(SimulationMillisecondsPerRealSecond);
             }
         }
 
