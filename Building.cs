@@ -14,12 +14,24 @@ namespace ConsoleApp1
         private QueuesAtFloors output;
         private Lift lift;
         private float bldCurrentTime;
-        public Building(int Nfloors) //, floorcallsCSV)
-        {
+        private List<Person> dataRef;
+        public Building(int Nfloors){
             this.floors = Nfloors;
             this.lift = new Lift(Nfloors);
             this.queuesAtFloors = new QueuesAtFloors(Nfloors);
             this.output = new QueuesAtFloors(floors);
+        }
+
+        public void AddInputData(ref List<Person> data){
+            dataRef = data;
+        }
+
+        void AddPeopleByFloorAndTime(float currentTime) {
+            foreach (Person pers in dataRef){
+                if(pers.CALL_TIME == currentTime){
+                    queuesAtFloors.addPersonToFloor(pers, pers.FROM_FLOOR);
+                }
+            }
         }
 
         public void incrementSimulation1Second(float currentTime)
@@ -28,6 +40,7 @@ namespace ConsoleApp1
             // the timer thread cycles 
 
             // add people to queues at current time, incrementing through everyone, checking == current time
+            AddPeopleByFloorAndTime(currentTime);
 
             // apply elevator's logic through processing time
             lift.IncrementSimulation1Second(currentTime);

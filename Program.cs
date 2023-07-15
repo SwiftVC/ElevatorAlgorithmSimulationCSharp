@@ -14,9 +14,9 @@ string csvNameSetting = ConfigurationManager.AppSettings["csvName"];
 string simSpeedFactorSetting = ConfigurationManager.AppSettings["simSpeedFactor"];
 float simSpeedFactor = float.Parse(simSpeedFactorSetting);
 
-
 /*~~ Read Input Data ~~*/
 List<Person> data = CSVReader.ReadCSV(csvNameSetting);
+bldng.AddInputData(ref data);
 
 /*~~ Start Threads with Interrupt ~~*/
 bool keyboardInterrupt = false;
