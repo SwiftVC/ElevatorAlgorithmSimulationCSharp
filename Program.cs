@@ -5,6 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Formats.Asn1;
 using System.Globalization;
 
+/*~~ Building config ~~*/
+Building bldng = new Building(5);
+
 /*~~ Read app.config ~~*/
 string csvNameSetting = ConfigurationManager.AppSettings["csvName"];
 
@@ -16,26 +19,12 @@ List<Person> data = CSVReader.ReadCSV(csvNameSetting);
 
 /*~~ Start Threads with Interrupt ~~*/
 bool keyboardInterrupt = false;
-Thread keyboardInterruptThread = new Thread(() => ConsoleApp1.GUIInterrupt.keyboardInterruptThreadFunct(ref keyboardInterrupt));
 Thread guiThread = new Thread(() => ConsoleApp1.GUIInterrupt.outputVisualsThreadFunct(ref keyboardInterrupt));
-Thread timerThread = new Thread(() => ConsoleApp1.TimerThread.TimerThreadFunct(ref keyboardInterrupt));
+ConsoleApp1.TimerThread timerThread = new ConsoleApp1.TimerThread(ref bldng);
+Thread keyboardInterruptThread = new Thread(() => ConsoleApp1.GUIInterrupt.keyboardInterruptThreadFunct(ref keyboardInterrupt, ref timerThread));
 keyboardInterruptThread.Start();
 guiThread.Start();
 timerThread.Start();
-
-
-
-
-
-void incrementSimulation1Second()
-{
-    // add people to queues at current time
-
-    // apply elevator's logic through processing time
-
-}
-
-Building bldng = new Building(5);
 
 /*~~ Join Threads ~~*/
 keyboardInterruptThread.Join();

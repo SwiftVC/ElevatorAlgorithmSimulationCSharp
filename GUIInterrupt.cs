@@ -9,10 +9,11 @@ namespace ConsoleApp1
 {
     internal class GUIInterrupt
     {
-        public static void keyboardInterruptThreadFunct(ref bool interrupt)
+        public static void keyboardInterruptThreadFunct(ref bool interrupt, ref TimerThread timerThread)
         {
             Console.ReadLine(); // Waits for keyboard input
             interrupt = true;
+            timerThread.Interrupt();
         }
 
         public static void outputVisualsThreadFunct(ref bool interrupt)
