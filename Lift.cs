@@ -15,6 +15,8 @@ namespace ConsoleApp1
         private LiftEnvironmentData liftEnvData;
         private int totalFloors = 10;
         private int defaultFloor = 1;
+        private int moveDownProgress = 0; // %
+        private int moveUpProgress = 0; // %
 
 
         public Lift(int floors, int liftPreferredFloor, ref QueuesAtFloors queuesRef, ref QueuesAtFloors outputRef){
@@ -28,11 +30,23 @@ namespace ConsoleApp1
         private bool CanElevMoveDown(){ return CurrentFloor() > 1; }
         private void MoveUp()
         {
-            if (CanElevMoveUp()) { elev.Moveup(); }
+            moveUpProgress += 10;
+            moveDownProgress = 0;
+
+            if (moveUpProgress == 100)
+            {
+                if (CanElevMoveUp()) { elev.Moveup(); moveUpProgress = 0; }
+            }
         }
         private void MoveDown()
         {
-            if (CanElevMoveDown()) { elev.Movedown(); }
+            moveDownProgress += 10;
+            moveUpProgress = 0;
+
+            if (moveDownProgress == 100)
+            {
+                if (CanElevMoveDown()) { elev.Movedown(); moveDownProgress = 0; }
+            }
         }
         public int CurrentFloor(){return elev.CurrentFloor();}
         private bool AtCapacity() { return Occupants() == elev.GetCapacity(); }
@@ -205,13 +219,16 @@ namespace ConsoleApp1
                 UpdateEndDestination(PollForFloorCalls());
             }
 
-            if (GetEndDestination() == -1)
-            {
-                TowardDefaultfloor();
-            }
-            else
+
+            // requires ten calls to LiftLogicLoop to finish
+
+            if (GetEndDestination() != -1)
             {
                 TowardDestination();
+            }
+            else if (currFloor != GetDefaultFloor())
+            {
+                TowardDefaultfloor();
             }
         }
 

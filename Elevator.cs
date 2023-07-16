@@ -12,7 +12,6 @@ namespace ConsoleApp1
     internal class Elevator
     {
         public static readonly int ELEVATORSTATEMAXFIELDWIDTH = 7;
-        int LIFTTIMEOPENING = int.Parse(ConfigurationManager.AppSettings["LIFTTIMEOPENINGMilliseconds"]);
 
 /*        public bool actionFinished = true;
         private CurrentAction currentAction = CurrentAction.NONE;
