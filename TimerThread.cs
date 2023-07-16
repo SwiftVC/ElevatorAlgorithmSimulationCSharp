@@ -25,7 +25,7 @@ namespace ConsoleApp1
 
             while (!interrupt)
             {
-                // incrementSimulation1Second();
+                // applies current time to simulation, lift logic proceeds upto current time.
                 building.incrementSimulation1Second(currentTimeSeconds);
                 // progress time 1 sec.
                 currentTimeSeconds++;

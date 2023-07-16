@@ -15,11 +15,12 @@ namespace ConsoleApp1
         private Lift lift;
         private float bldCurrentTime;
         private List<Person> dataRef;
-        public Building(int Nfloors){
+        public Building(int Nfloors, int liftPreferredFloor)
+        {
             this.floors = Nfloors;
-            this.lift = new Lift(Nfloors);
             this.queuesAtFloors = new QueuesAtFloors(Nfloors);
             this.output = new QueuesAtFloors(floors);
+            this.lift = new Lift(Nfloors, liftPreferredFloor, ref this.queuesAtFloors, ref this.output);
         }
 
         public void AddInputData(ref List<Person> data){
@@ -29,21 +30,16 @@ namespace ConsoleApp1
         void AddPeopleByFloorAndTime(float currentTime) {
             foreach (Person pers in dataRef){
                 if(pers.CALL_TIME == currentTime){
-                    queuesAtFloors.addPersonToFloor(pers, pers.FROM_FLOOR);
+                    queuesAtFloors.AddPersonToFloor(pers, pers.FROM_FLOOR);
                 }
             }
         }
 
-        public void incrementSimulation1Second(float currentTime)
+        public void incrementSimulation1Second(int currentTime)
         {
             bldCurrentTime = currentTime;
-            // the timer thread cycles 
-
-            // add people to queues at current time, incrementing through everyone, checking == current time
             AddPeopleByFloorAndTime(currentTime);
-
-            // apply elevator's logic through processing time
-            lift.IncrementSimulation1Second(currentTime);
+            lift.IncrementSimulation1Second(currentTime); // apply lifts's logic
         }
 
         public string GetBuildingRepresentation(){

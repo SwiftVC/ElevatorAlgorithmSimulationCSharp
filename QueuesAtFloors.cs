@@ -19,7 +19,7 @@ namespace ConsoleApp1
             }
         }
 
-        public void addPersonToFloor(Person person, int floor) {
+        public void AddPersonToFloor(Person person, int floor) {
             int floorIndex = floor - 1;
             queuesAtFloors[floorIndex].Add(person);
         }
@@ -30,7 +30,7 @@ namespace ConsoleApp1
             return queuesAtFloors[floorIndex].Count();
         }
 
-        public Person removeFirstPersonIndiscriminately(int floor)
+        public Person RemoveFirstPersonIndiscriminately(int floor)
         {
             int floorIndex = floor - 1;
             Person ret = queuesAtFloors[floorIndex][0];
@@ -38,9 +38,9 @@ namespace ConsoleApp1
             return ret;
         }
 
-        public int floorCount() { return queuesAtFloors.Count(); }
+        public int FloorCount() { return queuesAtFloors.Count(); }
 
-        public List<bool> getExternalButtonPanel(){
+        public List<bool> GetExternalButtonPanel(){
             List<bool> ret = new List<bool>();
             foreach (var queue in queuesAtFloors){ if (queue.Count() > 0) { ret.Add(true); } else { ret.Add(false); } }
             return ret;

@@ -6,7 +6,9 @@ using System.Formats.Asn1;
 using System.Globalization;
 
 /*~~ Building config ~~*/
-Building bldng = new Building(10);
+int totalFloors = 10;
+int liftPreferredFloor = 1;
+Building bldng = new Building(totalFloors, liftPreferredFloor);
 
 /*~~ Read app.config ~~*/
 string csvNameSetting = ConfigurationManager.AppSettings["csvName"];
