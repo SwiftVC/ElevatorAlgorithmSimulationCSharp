@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ConsoleApp1
 {
@@ -17,7 +19,11 @@ namespace ConsoleApp1
         private int defaultFloor = 1;
         private int moveDownProgress = 0; // %
         private int moveUpProgress = 0; // %
-
+        private bool notBetweenFloors = true;
+        private CSVBuilder csvBuilder = new CSVBuilder();
+        private int highestIDServed = -1;
+        private int HIGHESTID = 50;
+        private bool interruptSimulation;
 
         public Lift(int floors, int liftPreferredFloor, ref QueuesAtFloors queuesRef, ref QueuesAtFloors outputRef){
             elev = new Elevator(floors);
@@ -26,6 +32,8 @@ namespace ConsoleApp1
             liftEnvData = new LiftEnvironmentData(ref queuesRef, ref outputRef);
         }
 
+        public void SetIDToFinishSim(int id) { HIGHESTID = id; }
+        public void AddInterruptBoolean(ref bool interrupt) { interruptSimulation = interrupt; }
         private bool CanElevMoveUp() { return CurrentFloor() < totalFloors; }
         private bool CanElevMoveDown(){ return CurrentFloor() > 1; }
         private void MoveUp()
@@ -35,8 +43,9 @@ namespace ConsoleApp1
 
             if (moveUpProgress == 100)
             {
-                if (CanElevMoveUp()) { elev.Moveup(); moveUpProgress = 0; }
+                if (CanElevMoveUp()) { elev.Moveup(); moveUpProgress = 0; notBetweenFloors = true;  }
             }
+            else { notBetweenFloors = false; }
         }
         private void MoveDown()
         {
@@ -45,8 +54,9 @@ namespace ConsoleApp1
 
             if (moveDownProgress == 100)
             {
-                if (CanElevMoveDown()) { elev.Movedown(); moveDownProgress = 0; }
+                if (CanElevMoveDown()) { elev.Movedown(); moveDownProgress = 0; notBetweenFloors = true; }
             }
+            else { notBetweenFloors = false; }
         }
         public int CurrentFloor(){return elev.CurrentFloor();}
         private bool AtCapacity() { return Occupants() == elev.GetCapacity(); }
@@ -143,6 +153,9 @@ namespace ConsoleApp1
 
         int GetDefaultFloor() { return defaultFloor; }
 
+        void UpdateHighestIDServed(Person pers) { if (highestIDServed < pers.ID) { highestIDServed = pers.ID; } }
+        public bool FinishedServingPeople() { return highestIDServed == HIGHESTID; }
+
         void ServeCurrentFloor()
         {
             int currentFloor = CurrentFloor();
@@ -152,6 +165,7 @@ namespace ConsoleApp1
             foreach (Person pers in peopleGettingOff)
             {
                 liftEnvData.DropoffPers(currentFloor, pers);
+                UpdateHighestIDServed(pers);
             }
 
             while (liftEnvData.PeopleAtFloor(currentFloor) > 0 && !elev.Full())
@@ -189,39 +203,33 @@ namespace ConsoleApp1
         }
 
         public void IncrementSimulation1Second(int currentTime){
-            int remainingTimeMilliseconds = 1000;
-            ProgressSimulation(remainingTimeMilliseconds);
+            LiftLogicLoop(currentTime);
             return;
         }
-        
-        void ProgressSimulation(int remainingTimeMilliseconds)
-        {
-            LiftLogicLoop();
-            /*while(remainingTimeMilliseconds > 0)
-            {
-                //if (!elev.actionFinished){ elev.ContinueCurrentAction(remainingTimeMilliseconds); }
-            }*/
 
-        }
-
-        void LiftLogicLoop(){
+        void LiftLogicLoop(int currentTime){
             int currFloor = CurrentFloor();
-            if (ExternalRequestAtFloor(currFloor) &&
-                !AtCapacity() ||
-                InternalRequestAtFloor(currFloor) ||
-                currFloor == GetEndDestination())
-            {
-                ServeCurrentFloor();
+            if (notBetweenFloors) // Prevents serving current floor when in transit.
+            { 
+                
+                if (ExternalRequestAtFloor(currFloor) &&
+                    !AtCapacity() ||
+                    InternalRequestAtFloor(currFloor) ||
+                    currFloor == GetEndDestination())
+                {
+                    SaveOutputData(currentTime);
+                    ServeCurrentFloor();
+
+                    if (FinishedServingPeople()) {
+                        interruptSimulation = true;
+                    }
+                }
+
+                if (GetEndDestination() == -1)
+                {
+                    UpdateEndDestination(PollForFloorCalls());
+                }
             }
-
-            if (GetEndDestination() == -1)
-            {
-                UpdateEndDestination(PollForFloorCalls());
-            }
-
-
-            // requires ten calls to LiftLogicLoop to finish
-
             if (GetEndDestination() != -1)
             {
                 TowardDestination();
@@ -231,6 +239,17 @@ namespace ConsoleApp1
                 TowardDefaultfloor();
             }
         }
+        public void SaveOutputData(int currentTime)
+        {
+            int currFloor = CurrentFloor();
+            List<int> occupants = elev.GetIDsOfOccupants();
+            int endDestination = GetEndDestination();
+            csvBuilder.AddEntry(currentTime, currFloor, occupants, endDestination);
+        }
 
+        public void WriteCSV(string filename){
+            csvBuilder.WriteCSV(filename);
+        }
     }
+    
 }

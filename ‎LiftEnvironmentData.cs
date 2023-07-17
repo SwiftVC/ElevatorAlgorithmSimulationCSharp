@@ -28,7 +28,6 @@ namespace ConsoleApp1
             {
                 throw new Exception("Person served to wrong floor");
             }
-            //pers.reachedDestination();
             outputsRef.AddPersonToFloor(pers, floor);
         }
         public int PeopleAtFloor(int floor)

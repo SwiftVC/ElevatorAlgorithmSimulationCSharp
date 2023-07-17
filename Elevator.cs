@@ -12,31 +12,6 @@ namespace ConsoleApp1
     internal class Elevator
     {
         public static readonly int ELEVATORSTATEMAXFIELDWIDTH = 7;
-
-/*        public bool actionFinished = true;
-        private CurrentAction currentAction = CurrentAction.NONE;
-        private int currentActionMillisecondsLeft = 0;
-        public int ContinueCurrentAction(int milliseconds)
-        {
-            switch (currentAction)
-            {
-                case CurrentAction.NONE:
-                    throw new Exception("ContinueCurrentAction called with no currentAction");
-                default:
-                    return 3;
-            }
-        } 
-
-        private enum CurrentAction
-        {
-            NONE,
-            OPENINGDOORS,
-            RECIEVINGPERSON,
-            DELOADINGPERSON,
-            CLOSINGDOORS,
-            MOVINGUP,
-            MOVINGDOWN
-        }*/
         public enum ElevatorState
         {
             OPEN,
@@ -113,6 +88,8 @@ namespace ConsoleApp1
         public void DeactivateFloorButton(int floor){floorButtonPanel[floor - 1] = false;}
         public void ActivateFloorButton(int floor){floorButtonPanel[floor - 1] = true;}
         public List<bool> GetFloorButtonPanel() { return floorButtonPanel; }
+
+        public List<int> GetIDsOfOccupants() { return capacity.Select(p => p.ID).ToList();}
 
     }
 }

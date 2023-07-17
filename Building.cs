@@ -15,13 +15,16 @@ namespace ConsoleApp1
         private Lift lift;
         private float bldCurrentTime;
         private List<Person> dataRef;
-        public Building(int Nfloors, int liftPreferredFloor)
-        {
+        public Building(int Nfloors, int liftPreferredFloor){
             this.floors = Nfloors;
             this.queuesAtFloors = new QueuesAtFloors(Nfloors);
             this.output = new QueuesAtFloors(floors);
             this.lift = new Lift(Nfloors, liftPreferredFloor, ref this.queuesAtFloors, ref this.output);
         }
+
+        public void SetIDToFinishSim(int ID) { lift.SetIDToFinishSim(ID); }
+
+        public void AddInterruptBoolean(ref bool interrupt) { lift.AddInterruptBoolean(ref interrupt); }
 
         public void AddInputData(ref List<Person> data){
             dataRef = data;
@@ -35,8 +38,7 @@ namespace ConsoleApp1
             }
         }
 
-        public void incrementSimulation1Second(int currentTime)
-        {
+        public void incrementSimulation1Second(int currentTime){
             bldCurrentTime = currentTime;
             AddPeopleByFloorAndTime(currentTime);
             lift.IncrementSimulation1Second(currentTime); // apply lifts's logic
@@ -60,5 +62,8 @@ namespace ConsoleApp1
             return ret;
         }
 
+        public void WriteCSV(string filename){
+            lift.WriteCSV(filename);
+        }
     }
 }
