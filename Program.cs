@@ -21,8 +21,7 @@ bldng.SetIDToFinishSim(HIGHESTID);
 
 /*~~ Start Threads with Interrupt ~~*/
 bool simulationInterrupt = false;
-bldng.AddInterruptBoolean(ref simulationInterrupt);
-Thread guiThread = new Thread(() => ConsoleApp1.GUIInterrupt.OutputVisualsThreadFunct(ref simulationInterrupt, ref bldng));
+Thread guiThread = new Thread(() => ConsoleApp1.OutputVisuals.OutputVisualsThreadFunct(ref simulationInterrupt, ref bldng));
 ConsoleApp1.TimerThread timerThread = new ConsoleApp1.TimerThread(ref bldng);
 Thread simulationInterruptThread = new Thread(() => ConsoleApp1.GUIInterrupt.KeyboardInterruptThreadFunct(ref simulationInterrupt, ref timerThread));
 
