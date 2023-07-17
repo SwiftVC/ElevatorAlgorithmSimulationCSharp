@@ -23,7 +23,8 @@ namespace ConsoleApp1
         private CSVBuilder csvBuilder = new CSVBuilder();
         private int highestIDServed = -1;
         private int HIGHESTID = 50;
-        private bool interruptSimulation;
+        private bool simulationFinished = false;
+        private int finishTime = -1;
 
         public Lift(int floors, int liftPreferredFloor, ref QueuesAtFloors queuesRef, ref QueuesAtFloors outputRef){
             elev = new Elevator(floors);
@@ -33,7 +34,11 @@ namespace ConsoleApp1
         }
 
         public void SetIDToFinishSim(int id) { HIGHESTID = id; }
-        public void AddInterruptBoolean(ref bool interrupt) { interruptSimulation = interrupt; }
+
+        public bool SimulationFinished() { return simulationFinished; }
+        public int GetFinishTime() { return finishTime; }
+
+        private void SetFinishTime(int currentTime) { if (finishTime == -1) { finishTime = currentTime; } }
         private bool CanElevMoveUp() { return CurrentFloor() < totalFloors; }
         private bool CanElevMoveDown(){ return CurrentFloor() > 1; }
         private void MoveUp()
@@ -221,7 +226,8 @@ namespace ConsoleApp1
                     ServeCurrentFloor();
 
                     if (FinishedServingPeople()) {
-                        interruptSimulation = true;
+                        simulationFinished = true;
+                        SetFinishTime(currentTime);
                     }
                 }
 

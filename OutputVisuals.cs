@@ -15,7 +15,13 @@ namespace ConsoleApp1
             while (!interrupt)
             {
                 Console.Clear();
-                Console.Write(bld.GetBuildingRepresentation());
+                Console.WriteLine(bld.GetBuildingRepresentation());
+                if (bld.SimulationFinished())
+                {
+                    Console.WriteLine("Simulation finished at "+ bld.GetFinishTime() + " seconds.");
+                    Console.WriteLine("Enter any key to get output.csv");
+                }
+                
                 Thread.Sleep(TerminalRefreshRateMilliSec);
             }
         }

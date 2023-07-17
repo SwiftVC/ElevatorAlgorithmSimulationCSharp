@@ -23,8 +23,8 @@ namespace ConsoleApp1
         }
 
         public void SetIDToFinishSim(int ID) { lift.SetIDToFinishSim(ID); }
-
-        public void AddInterruptBoolean(ref bool interrupt) { lift.AddInterruptBoolean(ref interrupt); }
+        public bool SimulationFinished() { return lift.SimulationFinished(); }
+        public int GetFinishTime() { return lift.GetFinishTime(); }
 
         public void AddInputData(ref List<Person> data){
             dataRef = data;
